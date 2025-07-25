@@ -191,9 +191,23 @@ for i in range(102):
     pred = model.predict(X_scaled, verbose=0)
     model_preds.append(pred)
 
-    # Combine the predictions using majority voting
-    final_pred = np.where(np.array(model_preds).mean(axis=0) >= 0.5, 1, 0)
+# Convert to numpy array
+model_preds = np.array(model_preds)  # shape: (102, num_samples, 1)
 
+# Calculate mean and std of probabilities
+prob_mean = model_preds.mean(axis=0).flatten()  # shape: (num_samples,)
+prob_std = model_preds.std(axis=0).flatten()
 
-df_deepvis = pd.concat([pd.DataFrame(name_list), pd.DataFrame(final_pred)], ignore_index=True, axis=1,); df_deepvis.columns = ['Name', 'DeepViscosity_classes']
+# Final class prediction by majority vote (threshold=0.5 on mean probability)
+final_pred = (prob_mean >= 0.5).astype(int)
+
+# Combine into DataFrame
+df_deepvis = pd.DataFrame({
+    'Name': name_list,
+    'Prob_Mean': prob_mean,
+    'Prob_Std': prob_std,
+    'DeepViscosity_classes': final_pred
+    
+})
+
 df_deepvis.to_csv('DeepViscosity_classes.csv', index=False)
