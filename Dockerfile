@@ -37,26 +37,5 @@ RUN pip install --no-cache-dir keras==2.11.0 tensorflow-cpu==2.11.0 scikit-learn
 WORKDIR /app
 COPY . /app
 
-# Create a wrapper script to handle output directory
-RUN echo '#!/bin/bash\n\
-# Check if output directory is mounted\n\
-if [ -d "/app/output" ]; then\n\
-    # Run the analysis\n\
-    python deepviscosity_predictor.py\n\
-    \n\
-    # Copy output files to mounted output directory\n\
-    if [ -f "DeepViscosity_classes.csv" ]; then\n\
-        cp DeepViscosity_classes.csv /app/output/\n\
-    fi\n\
-    if [ -f "DeepSP_descriptors.csv" ]; then\n\
-        cp DeepSP_descriptors.csv /app/output/\n\
-    fi\n\
-    echo "Analysis completed. Output files copied to mounted directory."\n\
-else\n\
-    # Run without output directory mounting\n\
-    python deepviscosity_predictor.py\n\
-    echo "Analysis completed. Output files in current directory."\n\
-fi' > /app/run_analysis.sh && chmod +x /app/run_analysis.sh
-
-# Set the entrypoint to run the wrapper script
-ENTRYPOINT ["/app/run_analysis.sh"]
+# Set the entrypoint to run the main script
+ENTRYPOINT ["python", "deepviscosity_predictor.py"]
