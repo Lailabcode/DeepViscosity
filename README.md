@@ -9,6 +9,8 @@ DeepViscosity is an ensemble deep learning ANN model developed to predict high-c
 - DeepViscosity Classes (as well as the DeepSP spatial properties) for sequences inputed, will be populated and saved to a csv file - DeepViscosity_classes.csv.
 
 ## Option 2 - Linux environment 
+- git clone https://github.com/Lailabcode/DeepViscosity.git
+- cd DeepViscosity
 - create an environment and install necessary package
 	- conda create -n deepViscosity python=3.9.13
 	- source activate deepViscosity
